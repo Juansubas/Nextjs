@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar"
 import { Roboto } from 'next/font/google'
+import "./global.css";
 
 export const metadata = {
   title: 'Mi tienda con Next.js - HomePage',
@@ -19,7 +20,6 @@ export default function RootLayout({ children }) {
 
       <body className={roboto.className}>
         <header>
-          <h1>Navbar</h1>
           <Navbar />
         </header>
         {children}
