@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 function Users({ users }) {
@@ -13,9 +11,6 @@ function Users({ users }) {
           <li
             key={user.id}
             className="bg-slate-400 mb-2 p-4 rounded-md text-black flex justify-between"
-            onClick={() => {
-              alert(user.id);
-            }}
           >
             <div>
               <h5 className="font-bold">
