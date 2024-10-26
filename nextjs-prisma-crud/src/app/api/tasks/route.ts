@@ -1,7 +1,7 @@
 import { prisma } from "@/libs/prisma";
 import { Task } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { TaskData } from "./types/taskDataTypes";
+import { TaskData } from "../../../types/taskDataTypes";
 
 export async function GET() {
   const tasks: Task[] = await prisma.task.findMany();

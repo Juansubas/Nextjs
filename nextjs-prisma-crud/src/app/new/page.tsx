@@ -1,32 +1,48 @@
-"use client"
-
-import { Task } from "@prisma/client";
-import { FormEvent } from "react";
-import { useRouter } from "next/navigation"
+"use client";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import React from "react";
 
 function NewPage() {
-
+  const params = useParams();
   const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const onSubmit = async (e : FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (params.id) {
+      fetch(`/api/tasks/${params.id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setTitle(data.title);
+          setDescription(data.description);
+        });
+    }
+  }, []);
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget); 
-    const title = formData.get("title"); 
-    const description = formData.get("description")// 
+    if (params.id) {
+      await fetch(`/api/tasks/${params.id}`, {
+        method: "PUT",
+        body: JSON.stringify({ title, description }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } else {
+      await fetch("/api/tasks", {
+        method: "POST",
+        body: JSON.stringify({ title, description }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
 
-    const res = await fetch("/api/tasks", {
-      method: "POST",
-      body: JSON.stringify({ title, description }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-
-    const data : Task = await res.json();
-    console.log("Task created", data);
-
-    router.push("/",);
+    router.refresh();
+    router.push("/");
   };
 
   return (
@@ -41,6 +57,8 @@ function NewPage() {
           type="text"
           className="border border-gray-400 p-2 mb-4 w-full text-black"
           placeholder="Titulo"
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
         />
 
         <label htmlFor="description" className="font-bold text-sm">
@@ -52,10 +70,12 @@ function NewPage() {
           rows={3}
           className="border border-gray-400 p-2 mb-4 w-full text-black"
           placeholder="Describe tu tarea"
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
         ></textarea>
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounder">
-          Crear
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Enviar
         </button>
       </form>
     </div>

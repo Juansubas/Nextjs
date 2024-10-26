@@ -20,17 +20,21 @@ export async function GET(
   return NextResponse.json(task);
 }
 
-export async function PUT(request: NextRequest, params: { id: string }) {
-    const data = await request.json();
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  const data = await request.json();
 
-    const taksUpdated : Task = await prisma.task.update({
-        where: { id: Number(params.id) },
-        data,
-      },
-    );
+  console.log(params.id, "el id ");
+
+  const taksUpdated: Task = await prisma.task.update({
+    where: { id: Number(params.id) },
+    data : data,
+  });
+
+  console.log(taksUpdated)
 
   return NextResponse.json(taksUpdated);
 }
+
 export async function DELETE(request: NextRequest, params: { id: string }) {
   try {
     const taskRemoved: Task = await prisma.task.delete({
