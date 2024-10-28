@@ -1,5 +1,5 @@
 import { prisma } from "@/libs/prisma";
-import { Task } from "@prisma/client";
+import { Task } from "../../../../types/taskTypes";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
