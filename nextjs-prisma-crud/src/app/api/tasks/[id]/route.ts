@@ -6,8 +6,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const { id } = await params;
   const task: Task | null = await prisma.task.findUnique({
-    where: { id: Number(params.id) },
+    where: { id: Number(id) },
   });
 
   if (!task) {
@@ -20,25 +21,33 @@ export async function GET(
   return NextResponse.json(task);
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const data = await request.json();
+  const { id } = await params;
 
-  console.log(params.id, "el id ");
+  console.log(id, "el id ");
 
   const taksUpdated: Task = await prisma.task.update({
-    where: { id: Number(params.id) },
-    data : data,
+    where: { id: Number(id) },
+    data: data,
   });
 
-  console.log(taksUpdated)
+  console.log(taksUpdated);
 
   return NextResponse.json(taksUpdated);
 }
 
-export async function DELETE(request: NextRequest, params: { id: string }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const { id } = await params;
+
+    console.log(id, "el id ");
+
     const taskRemoved: Task = await prisma.task.delete({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
     });
 
     return NextResponse.json(taskRemoved);
